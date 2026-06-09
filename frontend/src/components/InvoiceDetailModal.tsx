@@ -10,6 +10,19 @@ interface InvoiceDetailModalProps {
   onClose: () => void;
 }
 
+const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    width={props.width || 16}
+    height={props.height || 16}
+    className={props.className}
+    style={props.style}
+  >
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.488 1.459 5.416 1.46 5.867 0 10.642-4.775 10.645-10.643.001-2.843-1.1-5.516-3.102-7.52C17.502 4.446 14.832 3.35 12.008 3.35c-5.874 0-10.65 4.776-10.654 10.645-.001 1.902.497 3.761 1.442 5.378l-1.022 3.73 3.824-1.002zm12.354-7.51c-.33-.165-1.951-.963-2.251-1.072-.3-.11-.518-.165-.736.165-.218.33-.846 1.072-1.037 1.292-.19.22-.38.242-.71.077-1.15-.578-1.996-1.01-2.793-2.378-.21-.362.21-.336.6-.113.35.2.783.9.783.9.23.39.23.67.11.9-.12.23-.74 1.8-1.01 2.455-.262.632-.527.535-.724.525-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.33-1.15 1.127-1.15 2.75 0 1.62 1.18 3.19 1.34 3.41.16.22 2.322 3.545 5.625 4.973.785.34 1.398.543 1.88.697.79.25 1.51.214 2.078.13.633-.095 1.95-.797 2.223-1.566.273-.77.273-1.43.19-1.566-.083-.136-.3-.218-.63-.383z" />
+  </svg>
+);
+
 export default function InvoiceDetailModal({ invoice, onClose }: InvoiceDetailModalProps) {
   if (!invoice) return null;
 
@@ -20,6 +33,50 @@ export default function InvoiceDetailModal({ invoice, onClose }: InvoiceDetailMo
   const handleDownloadPDF = () => {
     alert('Your browser will now open the print layout. Please select "Save as PDF" to download the PDF invoice.');
     window.print();
+  };
+
+  const handleShareWhatsApp = () => {
+    let cleanMobile = invoice.customer.mobileNumber.replace(/\D/g, '');
+    if (cleanMobile.length === 10) {
+      cleanMobile = `91${cleanMobile}`;
+    }
+
+    const itemsText = invoice.items.map((item, idx) => {
+      return `${idx + 1}. *${item.productName}* x ${item.quantity}\n   Rate: ₹${item.sellingPrice.toFixed(2)} | GST: ${item.gstPercent}%\n   Total: ₹${item.totalAmount.toFixed(2)}`;
+    }).join('\n');
+
+    const formattedDate = new Date(invoice.createdAt).toLocaleDateString('en-IN', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+
+    const message = `*TAX INVOICE - LAXMI ENTERPRISES*
+--------------------------------------------
+*Invoice No:* ${invoice.invoiceNumber}
+*Date:* ${formattedDate}
+*Customer:* ${invoice.customer.name}
+--------------------------------------------
+*Items Purchased:*
+${itemsText}
+
+--------------------------------------------
+*Tax Summary:*
+- Taxable Amount: ₹${invoice.taxableAmount.toFixed(2)}
+- CGST (Central Tax): ₹${(invoice.totalGst / 2).toFixed(2)}
+- SGST (State Tax): ₹${(invoice.totalGst / 2).toFixed(2)}
+- Total GST: ₹${invoice.totalGst.toFixed(2)}
+--------------------------------------------
+*Grand Total: ₹${invoice.totalAmount.toFixed(2)}*
+--------------------------------------------
+*Payment Status:* PAID IN FULL
+
+Thank you for shopping with Laxmi Enterprises!
+For warranty claims, returns, or support:
+Phone: +91 XXXXX XXXXX
+Email: support@laxmienterprises.com`;
+
+    const encodedText = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${cleanMobile}?text=${encodedText}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -240,6 +297,12 @@ export default function InvoiceDetailModal({ invoice, onClose }: InvoiceDetailMo
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-blue-100 hover:bg-blue-700"
           >
             <Download className="h-4 w-4" /> Download PDF
+          </button>
+          <button
+            onClick={handleShareWhatsApp}
+            className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-emerald-100 hover:bg-emerald-700 transition active:scale-95"
+          >
+            <WhatsappIcon className="h-4 w-4 text-white" /> Send to WhatsApp
           </button>
         </div>
 
