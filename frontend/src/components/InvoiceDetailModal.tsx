@@ -75,7 +75,7 @@ export default function InvoiceDetailModal({ invoice, onClose }: InvoiceDetailMo
         {/* Modal Scrollable Content */}
         <div className="flex-1 overflow-y-auto py-6 pr-1">
           <div id="printable-invoice-content" className="space-y-6 text-sm text-gray-600 bg-white">
-            
+
             {/* Invoice Header */}
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
@@ -84,8 +84,8 @@ export default function InvoiceDetailModal({ invoice, onClose }: InvoiceDetailMo
                 </div>
                 <div>
                   <h4 className="font-extrabold text-gray-900 text-base">LAXMI ENTERPRISES</h4>
-                  <p className="text-xs text-gray-400 font-semibold">123, Hardware Lane, Iron Bazaar, Mumbai</p>
-                  <p className="text-[10px] text-gray-400">Mobile: +91 98765 43210</p>
+                  <p className="text-xs text-gray-400 font-semibold">Deoria Dhush Chhuraha, Deoria, Uttar Pradesh</p>
+                  <p className="text-[10px] text-gray-400">Mobile: +91 9555487247</p>
                 </div>
               </div>
               <div className="text-right">
