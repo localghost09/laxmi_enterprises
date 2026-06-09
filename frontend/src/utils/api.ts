@@ -50,15 +50,15 @@ export interface DashboardStats {
 // Authentication Helpers
 export const getToken = (): string | null => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
   return null;
 };
 
 export const logoutAdmin = () => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
   }
 };
@@ -107,8 +107,8 @@ export const login = async (username: string, password: string): Promise<{ token
 
   const data = await res.json();
   if (typeof window !== 'undefined') {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    sessionStorage.setItem('token', data.token);
+    sessionStorage.setItem('user', JSON.stringify(data.user));
   }
   return data;
 };
