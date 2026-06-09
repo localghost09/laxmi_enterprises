@@ -4,7 +4,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, Receipt, FileText, Menu, X, Hammer } from 'lucide-react';
+import { LayoutDashboard, Package, Receipt, FileText, Menu, X, Hammer, LogOut } from 'lucide-react';
+import { logoutAdmin } from '../utils/api';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -72,6 +73,17 @@ export default function Sidebar() {
             );
           })}
         </nav>
+
+        {/* Logout Button */}
+        <div className="mt-auto pb-4 border-t border-gray-100 pt-4">
+          <button
+            onClick={logoutAdmin}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 active:scale-95"
+          >
+            <LogOut className="h-5 w-5 text-red-500" />
+            Logout
+          </button>
+        </div>
 
         {/* Footer info */}
         <div className="border-t border-gray-100 pt-4 text-center text-xs text-gray-400">

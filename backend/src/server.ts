@@ -5,6 +5,8 @@ import { connectDB } from './config/db';
 import productRoutes from './routes/productRoutes';
 import invoiceRoutes from './routes/invoiceRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
+import authRoutes from './routes/authRoutes';
+import { authMiddleware } from './middleware/authMiddleware';
 
 // Load environment variables
 dotenv.config();
@@ -21,9 +23,10 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api/products', productRoutes);
-app.use('/api/invoices', invoiceRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', authMiddleware, productRoutes);
+app.use('/api/invoices', authMiddleware, invoiceRoutes);
+app.use('/api/dashboard', authMiddleware, dashboardRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
